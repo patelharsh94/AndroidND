@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class PopularMovieGrid extends Fragment implements MovieDBAPIResultGetter {
 
-    private String API_URL = "https://api.themoviedb.org/3/movie/popular?api_key=f3ef1a64d5d3b1d4605bf13f2a17ac88\n";
+    private String API_URL = getString(R.string.api_url);
     private MovieApiCallTask apiCallTask;
     private ArrayList<Movie> movieList = null;
 

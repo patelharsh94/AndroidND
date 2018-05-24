@@ -8,4 +8,5 @@
     <string name="type_top_rated">TOP_RATED</string>
     <string name="movie_data_extra">EXTRA_MOVIE_DATA</string>
     <string name="summary">Summary:</string>
+    <string name="api_url">https://api.themoviedb.org/3/movie/top_rated?api_key={api_key}</string>
 </resources>
