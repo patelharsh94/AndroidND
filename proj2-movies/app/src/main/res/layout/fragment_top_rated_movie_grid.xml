@@ -1,0 +1,22 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.androidnd.harshpatel.movies.TopRatedMovieGrid"
+    android:id="@+id/top_rated_movie_grid">
+
+    <!-- TODO: Update blank fragment layout -->
+    <GridView
+        android:id="@+id/top_rated_grid"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:horizontalSpacing="0dp"
+        android:numColumns="2"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="0dp"
+        >
+    </GridView>
+
+
+</FrameLayout>

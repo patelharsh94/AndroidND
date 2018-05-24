@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Movies</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="top_rated_title">TOP RATED</string>
+    <string name="most_popular_title">MOST POPULAR</string>
+    <string name="type_popular">POPULAR</string>
+    <string name="type_top_rated">TOP_RATED</string>
+    <string name="movie_data_extra">EXTRA_MOVIE_DATA</string>
+    <string name="summary">Summary:</string>
+</resources>
