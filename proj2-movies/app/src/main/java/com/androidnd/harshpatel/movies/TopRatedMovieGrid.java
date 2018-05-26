@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class TopRatedMovieGrid extends Fragment implements MovieDBAPIResultGetter {
 
-    private String API_URL = getString(R.string.api_url);
+    private String API_URL;
     private MovieApiCallTask apiCallTask;
     private ArrayList<Movie> movieList = null;
 
@@ -26,11 +26,10 @@ public class TopRatedMovieGrid extends Fragment implements MovieDBAPIResultGette
                              Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_top_rated_movie_grid, container, false);
-
+        API_URL =  this.getResources().getString(R.string.api_url_top_rated_movie);
         apiCallTask = new MovieApiCallTask(root);
         apiCallTask.resultGetter = this;
         apiCallTask.execute(API_URL, String.valueOf(R.string.type_top_rated));
-
         return root;
     }
 

@@ -57,7 +57,9 @@ public class MovieApiCallTask extends AsyncTask<String, Integer, ArrayList<Movie
                                                 currMovie.getString("backdrop_path"),
                                                 currMovie.getString("poster_path"),
                                                 currMovie.getString("release_date"),
-                                                currMovie.getString("overview")
+                                                currMovie.getString("overview"),
+                                                currMovie.getString("vote_average"),
+                                                currMovie.getString("vote_count")
                                             ));
                 movieIndex ++;
             }

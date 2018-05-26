@@ -11,7 +11,7 @@ import android.os.Parcelable;
 
 public class Movie implements Parcelable
 {
-    private String title, posterUrl, thumbnailUrl, releaseData, summary;
+    private String title, posterUrl, thumbnailUrl, releaseData, summary, vote_average, vote_count;
 
     private Movie(Parcel in) {
         title = in.readString();
@@ -19,14 +19,19 @@ public class Movie implements Parcelable
         thumbnailUrl = in.readString();
         releaseData = in.readString();
         summary = in.readString();
+        vote_average = in.readString();
+        vote_count = in.readString();
     }
 
-    public Movie(String title, String posterUrl, String thumbnailUrl, String releaseData, String summary) {
+    public Movie(String title, String posterUrl, String thumbnailUrl, String releaseData,
+                 String summary, String vote_average, String vote_count) {
         this.title = title;
         this.posterUrl = posterUrl;
         this.thumbnailUrl = thumbnailUrl;
         this.releaseData = releaseData;
         this.summary = summary;
+        this.vote_average = vote_average;
+        this.vote_count = vote_count;
     }
 
     public String getTitle() {
@@ -49,6 +54,11 @@ public class Movie implements Parcelable
         return summary;
     }
 
+    public String getVote_average() { return vote_average; }
+
+    public String getVote_count() { return vote_count; }
+
+
     @Override
     public String toString() {
         return "Movie{" +
@@ -57,6 +67,8 @@ public class Movie implements Parcelable
                 ", thumbnailUrl='" + thumbnailUrl + '\'' +
                 ", releaseData='" + releaseData + '\'' +
                 ", summary='" + summary + '\'' +
+                ", vote_count='" + vote_count + '\'' +
+                ", vote_average='" + vote_average + '\'' +
                 '}';
     }
 
@@ -72,6 +84,8 @@ public class Movie implements Parcelable
         parcel.writeString(this.thumbnailUrl);
         parcel.writeString(this.releaseData);
         parcel.writeString(this.summary);
+        parcel.writeString(this.vote_average);
+        parcel.writeString(this.vote_count);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
