@@ -8,9 +8,9 @@
     <string name="type_top_rated">TOP_RATED</string>
     <string name="movie_data_extra">EXTRA_MOVIE_DATA</string>
     <string name="summary">Summary:</string>
-    <string name="api_url">https://api.themoviedb.org/3/movie/550?api_key=f3ef1a64d5d3b1d4605bf13f2a17ac88\n</string>
-    <string name="api_url_popular_movie">https://api.themoviedb.org/3/movie/popular?api_key=f3ef1a64d5d3b1d4605bf13f2a17ac88\n</string>
-    <string name="api_url_top_rated_movie">https://api.themoviedb.org/3/movie/top_rated?api_key=f3ef1a64d5d3b1d4605bf13f2a17ac88\n</string>
+    <string name="api_url">https://api.themoviedb.org/3/movie/550?api_key={}\n</string>
+    <string name="api_url_popular_movie">https://api.themoviedb.org/3/movie/popular?api_key={}\n</string>
+    <string name="api_url_top_rated_movie">https://api.themoviedb.org/3/movie/top_rated?api_key={}\n</string>
     <string name="date_of_release">Date Of Release:</string>
     <string name="movie_ratings">Ratings:</string>
 
