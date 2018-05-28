@@ -62,7 +62,7 @@ public class MovieImageAdapter extends BaseAdapter{
 
         if(view == null) {
 
-            movie_grid = layoutInflater.inflate(R.layout.movie_with_title, viewGroup);
+            movie_grid = layoutInflater.inflate(R.layout.movie_with_title, null);
             imageView = movie_grid.findViewById(R.id.movie_image);
             textView = movie_grid.findViewById(R.id.movie_title);
             textView.setText(movieList.get(i).getTitle());
