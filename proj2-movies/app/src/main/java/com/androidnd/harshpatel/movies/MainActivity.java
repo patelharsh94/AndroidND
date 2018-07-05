@@ -1,13 +1,10 @@
 package com.androidnd.harshpatel.movies;
 
-import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.ViewParent;
-import android.widget.TabHost;
+
 
 public class MainActivity extends AppCompatActivity {
 

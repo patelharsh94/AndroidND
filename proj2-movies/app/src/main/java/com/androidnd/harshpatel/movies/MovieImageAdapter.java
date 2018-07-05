@@ -25,9 +25,14 @@ public class MovieImageAdapter extends BaseAdapter{
     private String IMAGE_API_BASE_URL = "http://image.tmdb.org/t/p/w185";
 
 
-    public MovieImageAdapter(Context context, ArrayList<Movie> movieList) {
+    public MovieImageAdapter(Context context, ArrayList<Movie> movies) {
         this.mContext = context;
-        this.movieList = movieList;
+        movieList = new ArrayList<>();
+        for(Movie movie : movies) {
+            if(!movieList.contains(movie)) {
+                movieList.add(movie);
+            }
+        }
     }
 
     @Override
@@ -70,8 +75,6 @@ public class MovieImageAdapter extends BaseAdapter{
         else {
             movie_grid = view;
         }
-
-        Log.i("TAG", IMAGE_API_BASE_URL+movieList.get(i).getPosterUrl() );
 
         Picasso.with(imageView.getContext()).load(IMAGE_API_BASE_URL+movieList.get(i).getThumbnailUrl()).into(imageView);
 
