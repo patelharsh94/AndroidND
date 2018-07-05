@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_movie_show_case"
     >
 
     <android.support.design.widget.AppBarLayout
@@ -109,19 +110,17 @@
                 android:layout_alignStart="@+id/ratings"
                 />
 
-
-
             <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_below="@id/total_votes"
-            android:text="@string/summary"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:id="@+id/movie_summary_label"
-            />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/fav_choice_button"
+                android:text="@string/summary"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:id="@+id/movie_summary_label"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -133,6 +132,54 @@
                 android:layout_marginTop="5dp"
                 android:id="@+id/movie_summary"
                 />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fav_choice_button"
+                android:layout_below="@+id/movie_thumbnail"
+                android:text="@string/fav_label"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimary"></View>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/trailer_label"
+                android:text="@string/trailer_label"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_below="@+id/movie_summary"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/trailer_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/trailer_label"
+                android:scrollbars="vertical" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textStyle="bold"
+                android:text="Reviews"
+                android:layout_below="@id/trailer_recycler_view"
+                android:textSize="20sp"
+                android:id="@+id/reviews_label"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/review_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/reviews_label"
+                android:scrollbars="vertical" />
+
 
         </RelativeLayout>
 

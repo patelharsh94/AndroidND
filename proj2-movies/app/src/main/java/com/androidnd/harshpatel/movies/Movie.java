@@ -1,5 +1,7 @@
 package com.androidnd.harshpatel.movies;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,6 +14,8 @@ import android.os.Parcelable;
 public class Movie implements Parcelable
 {
     private String title, posterUrl, thumbnailUrl, releaseData, summary, vote_average, vote_count;
+    private int isFavorite;
+    private String id;
 
     private Movie(Parcel in) {
         title = in.readString();
@@ -21,10 +25,12 @@ public class Movie implements Parcelable
         summary = in.readString();
         vote_average = in.readString();
         vote_count = in.readString();
+        id = in.readString();
+        isFavorite = in.readInt();
     }
 
     public Movie(String title, String posterUrl, String thumbnailUrl, String releaseData,
-                 String summary, String vote_average, String vote_count) {
+                 String summary, String vote_average, String vote_count, String id, int isFavorite) {
         this.title = title;
         this.posterUrl = posterUrl;
         this.thumbnailUrl = thumbnailUrl;
@@ -32,6 +38,8 @@ public class Movie implements Parcelable
         this.summary = summary;
         this.vote_average = vote_average;
         this.vote_count = vote_count;
+        this.id = id;
+        this.isFavorite = isFavorite;
     }
 
     public String getTitle() {
@@ -58,6 +66,9 @@ public class Movie implements Parcelable
 
     public String getVote_count() { return vote_count; }
 
+    public String getId() { return id; }
+
+    public int getIsFavorite() { return isFavorite; };
 
     @Override
     public String toString() {
@@ -69,6 +80,8 @@ public class Movie implements Parcelable
                 ", summary='" + summary + '\'' +
                 ", vote_count='" + vote_count + '\'' +
                 ", vote_average='" + vote_average + '\'' +
+                ", id='" + id + '\'' +
+                ", isFavorite='" + isFavorite + '\'' +
                 '}';
     }
 
@@ -86,6 +99,8 @@ public class Movie implements Parcelable
         parcel.writeString(this.summary);
         parcel.writeString(this.vote_average);
         parcel.writeString(this.vote_count);
+        parcel.writeString(this.id);
+        parcel.writeInt(this.isFavorite);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {

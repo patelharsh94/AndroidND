@@ -6,12 +6,28 @@
     <string name="most_popular_title">MOST POPULAR</string>
     <string name="type_popular">POPULAR</string>
     <string name="type_top_rated">TOP_RATED</string>
+    <string name="type_single_url">SINGLE_URL</string>
+    <string name="type_review">REVIEWS</string>
+    <string name="type_trailer">TRAILERS</string>
     <string name="movie_data_extra">EXTRA_MOVIE_DATA</string>
     <string name="summary">Summary:</string>
-    <string name="api_url">https://api.themoviedb.org/3/movie/550?api_key={}\n</string>
-    <string name="api_url_popular_movie">https://api.themoviedb.org/3/movie/popular?api_key={}\n</string>
-    <string name="api_url_top_rated_movie">https://api.themoviedb.org/3/movie/top_rated?api_key={}\n</string>
+    <string name="api_url">https://api.themoviedb.org/3/movie/550?api_key=f3ef1a64d5d3b1d4605bf13f2a17ac88\n</string>
+    <string name="api_url_popular_movie">https://api.themoviedb.org/3/movie/popular?api_key=f3ef1a64d5d3b1d4605bf13f2a17ac88\n</string>
+    <string name="api_url_top_rated_movie">https://api.themoviedb.org/3/movie/top_rated?api_key=f3ef1a64d5d3b1d4605bf13f2a17ac88\n</string>
+    <string name="api_url_single_movie">https://api.themoviedb.org/3/movie/%s?api_key=f3ef1a64d5d3b1d4605bf13f2a17ac88\n</string>
+    <string name="api_url_review">https://api.themoviedb.org/3/movie/%s/reviews?api_key=f3ef1a64d5d3b1d4605bf13f2a17ac88</string>
+    <string name="api_url_trailer">https://api.themoviedb.org/3/movie/%s/videos?api_key=f3ef1a64d5d3b1d4605bf13f2a17ac88</string>
     <string name="date_of_release">Date Of Release:</string>
     <string name="movie_ratings">Ratings:</string>
-
+    <string name="fav_label">Favorite</string>
+    <string name="favorite_movie_title">FAVORITE</string>
+    <string name="database_name">fav_movie_db</string>
+    <string name="get_fav_movie_by_id">GET_FAV_BY_ID</string>
+    <string name="update_fav_movie_list">UPDATE_FAV_LIST</string>
+    <string name="insert_fav_movie">INSERT_FAV_MOVIE</string>
+    <string name="get_all_fav_movie">GET_ALL_FAV</string>
+    <string name="delete_fav_movie">DEL_FAV_MOVIE</string>
+    <string name="IS_FAV_MOVIE">is_fav_movie</string>
+    <string name="trailer_label">Trailer:</string>
+    <string name="play_button_description">just a picture of a play button</string>
 </resources>

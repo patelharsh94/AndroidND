@@ -1,20 +1,28 @@
 package com.androidnd.harshpatel.movies;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import java.util.ArrayList;
 
 
-public class TopRatedMovieGrid extends Fragment implements MovieDBAPIResultGetter {
+public class TopRatedMovieGrid extends Fragment implements MovieDBAPIResultGetter, FavMovieDBResultGetter {
 
     private String API_URL;
     private MovieApiCallTask apiCallTask;
-    private ArrayList<Movie> movieList = null;
+    private ArrayList<Movie> movieList = new ArrayList<>();
+    private View root;
+    private GridView movie_grid;
+    private FavMovieDataOpsTask favMovieDataOpsTask;
+    private ArrayList<FavoriteMovie> favoriteMovies = new ArrayList<>();
+    private ArrayList<String> favMovieIds = new ArrayList<>();
 
 
     public TopRatedMovieGrid() {
@@ -25,17 +33,54 @@ public class TopRatedMovieGrid extends Fragment implements MovieDBAPIResultGette
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_top_rated_movie_grid, container, false);
+        root = inflater.inflate(R.layout.fragment_top_rated_movie_grid, container, false);
         API_URL =  this.getResources().getString(R.string.api_url_top_rated_movie);
         apiCallTask = new MovieApiCallTask(root);
         apiCallTask.resultGetter = this;
         apiCallTask.execute(API_URL, String.valueOf(R.string.type_top_rated));
+
         return root;
     }
 
     @Override
-    public void getMovieApiResult(ArrayList<Movie> movieList) {
+    public void getMovieApiResult(final ArrayList<Movie> movieList) {
         this.movieList = movieList;
+        movie_grid =  root.findViewById(R.id.top_rated_grid);
+
+        movie_grid.setAdapter(new MovieImageAdapter(root.getContext(), movieList));
+        movie_grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Movie currMovie = movieList.get(i);
+
+                Intent movieShowCase = new Intent(view.getContext(), MovieShowCase.class);
+                movieShowCase.putExtra(String.valueOf(R.string.movie_data_extra), currMovie);
+                view.getContext().startActivity(movieShowCase);
+            }
+        });
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        favMovieDataOpsTask = new FavMovieDataOpsTask(root.getContext());
+        favMovieDataOpsTask.resultGetter = this;
+
+        favMovieDataOpsTask.execute(root.getContext().getString(R.string.get_all_fav_movie), "", "");
+        Log.i("TAG", "IN ON START");
+    }
+
+    @Override
+    public void getFavMovieData(ArrayList<FavoriteMovie> favoriteMovies) {
+        this.favoriteMovies = favoriteMovies;
+
+        for(FavoriteMovie favoriteMovie : favoriteMovies) {
+            favMovieIds.add(favoriteMovie.getId());
+        }
+
+        Log.i("TAG", favoriteMovies.toString());
     }
 
 }

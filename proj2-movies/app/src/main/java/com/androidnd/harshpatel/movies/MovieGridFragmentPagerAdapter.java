@@ -29,6 +29,8 @@ public class MovieGridFragmentPagerAdapter extends FragmentPagerAdapter {
                 return new PopularMovieGrid();
             case 1:
                 return new TopRatedMovieGrid();
+            case 2:
+                return new FavoriteMovieGrid();
             default:
                 return null;
         }
@@ -36,7 +38,7 @@ public class MovieGridFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -47,6 +49,8 @@ public class MovieGridFragmentPagerAdapter extends FragmentPagerAdapter {
                 return mContext.getString(R.string.most_popular_title);
             case 1:
                 return  mContext.getString(R.string.top_rated_title);
+            case 2: 
+                return mContext.getString(R.string.favorite_movie_title);
             default:
                 return "DEFAULT";
         }
