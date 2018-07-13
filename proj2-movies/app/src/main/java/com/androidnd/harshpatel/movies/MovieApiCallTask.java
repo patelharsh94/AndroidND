@@ -14,10 +14,12 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by harsh.patel on 5/10/18.
@@ -28,11 +30,9 @@ public class MovieApiCallTask extends AsyncTask<String, Integer, ArrayList<Movie
 
     private static String MOVIEAPICALLTASKTAG = "MOVIE_API_CALL";
     MovieDBAPIResultGetter resultGetter = null;
-    View root;
     String type;
 
-    MovieApiCallTask(View root) {
-        this.root = root;
+    MovieApiCallTask() {
     }
 
     // A method to parse json from the movie string.
@@ -46,7 +46,7 @@ public class MovieApiCallTask extends AsyncTask<String, Integer, ArrayList<Movie
             JSONObject movieJSON = new JSONObject(movieData);
             JSONObject currMovie;
 
-            if(this.type.equals(root.getResources().getString(R.string.type_single_url))) {
+            if(this.type.equals("SINGLE_URL")) {
                 finalMovieList.add(new Movie(movieJSON.getString("title"),
                         movieJSON.getString("backdrop_path"),
                         movieJSON.getString("poster_path"),
@@ -99,30 +99,41 @@ public class MovieApiCallTask extends AsyncTask<String, Integer, ArrayList<Movie
         // Get the data
         try
         {
-            URL url = new URL(urls[0]);
-            this.type = urls[1];
-
-            Log.i(MOVIEAPICALLTASKTAG, url.toString());
-            String movieData;
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("Accept", "application/json");
+            this.type = urls[urls.length-1];
+            ArrayList<String> API_URL_LIST = new ArrayList<>(Arrays.asList(urls));
+            API_URL_LIST.remove(urls.length-1);
 
 
-            if (conn.getResponseCode() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : "
-                        + conn.getResponseCode());
+            for(String curr_url : API_URL_LIST) {
+
+                URL url = new URL(curr_url);
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("Accept", "application/json");
+
+                Log.i(MOVIEAPICALLTASKTAG, url.toString());
+                String movieData;
+
+
+
+                if (conn.getResponseCode() != 200) {
+                    throw new RuntimeException("Failed : HTTP error code : "
+                            + conn.getResponseCode());
+                }
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(
+                        (conn.getInputStream())));
+
+
+                while ((movieData = br.readLine()) != null) {
+                    finalMovieList.addAll(parseJsonFromMovie(movieData));
+                }
+
+                conn.disconnect();
             }
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
 
-
-            while ((movieData = br.readLine()) != null) {
-                finalMovieList = parseJsonFromMovie(movieData);
-            }
-
-            conn.disconnect();
 
         } catch (Exception e)
         {
