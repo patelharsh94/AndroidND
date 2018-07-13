@@ -2,11 +2,13 @@ package com.androidnd.harshpatel.movies;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 @Entity
-public class FavoriteMovie {
+public class FavoriteMovie implements Parcelable {
 
     @NonNull
     @PrimaryKey
@@ -14,6 +16,11 @@ public class FavoriteMovie {
     private String title;
 
     public FavoriteMovie() {
+    }
+
+    private FavoriteMovie(Parcel in) {
+        id = in.readString();
+        title = in.readString();
     }
 
     public String getId() { return id; }
@@ -54,4 +61,28 @@ public class FavoriteMovie {
     public String toString() {
         return id + " : " + title;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(this.id);
+        parcel.writeString(this.title);
+    }
+
+    public static final Parcelable.Creator<FavoriteMovie> CREATOR = new Parcelable.Creator<FavoriteMovie>() {
+
+        @Override
+        public FavoriteMovie createFromParcel(Parcel parcel) {
+            return new FavoriteMovie(parcel);
+        }
+
+        @Override
+        public FavoriteMovie [] newArray(int i) {
+            return new FavoriteMovie[0];
+        }
+    };
 }

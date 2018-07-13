@@ -1,7 +1,10 @@
 package com.androidnd.harshpatel.movies;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -22,14 +25,13 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MovieShowCase extends AppCompatActivity implements FavMovieDBResultGetter, ReviewTrailerResultGetter{
+public class MovieShowCase extends AppCompatActivity implements ReviewTrailerResultGetter{
 
     private ArrayList<FavoriteMovie> favoriteMoviesList = new ArrayList<>();
     private Movie movie;
     private FavoriteMovie favoriteMovie;
     private CheckBox isFavorite;
     private Context root;
-    private FavMovieDBManipulator favMovieDBManipulator;
     private boolean isFavoriteChecked = false;
     private FavMovieDataOpsTask favMovieDataOpsTask;
     private ArrayList<FavoriteMovie> favoriteMovies = new ArrayList<>();
@@ -91,11 +93,6 @@ public class MovieShowCase extends AppCompatActivity implements FavMovieDBResult
         reviewRecyclerView.setAdapter(reviewsAdapter);
         reviewsAdapter.notifyDataSetChanged();
 
-
-        favMovieDataOpsTask = new FavMovieDataOpsTask(root);
-        favMovieDataOpsTask.resultGetter = this;
-        favMovieDataOpsTask.execute(root.getString(R.string.get_all_fav_movie), "", "");
-
         favoriteMovie = new FavoriteMovie();
         favoriteMovie.setTitle(movie.getTitle());
         favoriteMovie.setId(movie.getId());
@@ -142,39 +139,19 @@ public class MovieShowCase extends AppCompatActivity implements FavMovieDBResult
     @Override
     protected void onStop() {
         super.onStop();
-        favMovieDataOpsTask = new FavMovieDataOpsTask(root);
-        favMovieDataOpsTask.resultGetter = this;
 
         if(isFavoriteChecked)
         {
-            favMovieDataOpsTask.execute(root.getString(R.string.insert_fav_movie), favoriteMovie.getId(), favoriteMovie.getTitle());
+            final FavMoviesViewModel viewModel = ViewModelProviders.of(this).get(FavMoviesViewModel.class);
+
+            viewModel.insertFavMovie(favoriteMovie, root);
         }
         else {
 
-            favMovieDataOpsTask.execute(root.getString(R.string.delete_fav_movie), favoriteMovie.getId(), favoriteMovie.getTitle());
+            final FavMoviesViewModel viewModel = ViewModelProviders.of(this).get(FavMoviesViewModel.class);
+
+            viewModel.deleteFavMovie(favoriteMovie, root);
         }
-    }
-
-    @Override
-    public void getFavMovieData(ArrayList<FavoriteMovie> favoriteMovies) {
-        this.favoriteMovies = favoriteMovies;
-
-        for(FavoriteMovie favoriteMovie : favoriteMovies) {
-            favMovieIds.add(favoriteMovie.getId());
-        }
-
-
-        if(favMovieIds.contains(favoriteMovie.getId()))
-        {
-            isFavoriteChecked = true;
-        }
-        else {
-            isFavoriteChecked = false;
-        }
-
-        isFavorite.setChecked(isFavoriteChecked);
-
-        Log.i("TAG_A", favoriteMovies.toString());
     }
 
     @Override
@@ -206,7 +183,42 @@ public class MovieShowCase extends AppCompatActivity implements FavMovieDBResult
 
         trailerRecyclerView.setAdapter(trailerAdapter);
         trailerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        final FavMoviesViewModel viewModel = ViewModelProviders.of(this).get(FavMoviesViewModel.class);
+
+        viewModel.getFavMovies(root).observe(this, new Observer<ArrayList<FavoriteMovie>>() {
+            @Override
+            public void onChanged(@Nullable ArrayList<FavoriteMovie> favoriteMovieArrayList) {
+                favoriteMovies = favoriteMovieArrayList;
+                Log.i("TAG_C", "GOT FAV MOVIES: " + favoriteMovieArrayList.toString());
+
+                for(FavoriteMovie favoriteMovie : favoriteMovies) {
+                    favMovieIds.add(favoriteMovie.getId());
+                }
 
 
+                if(favMovieIds.contains(favoriteMovie.getId()))
+                {
+                    isFavoriteChecked = true;
+                }
+                else {
+                    isFavoriteChecked = false;
+                }
+
+                isFavorite.setChecked(isFavoriteChecked);
+
+            }
+        });
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 }
