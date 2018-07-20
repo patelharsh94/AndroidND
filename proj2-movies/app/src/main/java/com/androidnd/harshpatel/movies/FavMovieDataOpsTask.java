@@ -1,5 +1,6 @@
 package com.androidnd.harshpatel.movies;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -8,7 +9,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class FavMovieDataOpsTask extends AsyncTask<String, Integer, ArrayList<FavoriteMovie>> {
+public class FavMovieDataOpsTask extends AsyncTask<String, Integer, LiveData<FavoriteMovie []>> {
 
     Context root;
     private FavMovieDB favMovieDB;
@@ -25,16 +26,13 @@ public class FavMovieDataOpsTask extends AsyncTask<String, Integer, ArrayList<Fa
     }
 
     @Override
-    protected void onPostExecute(ArrayList<FavoriteMovie> favoriteMovies) {
+    protected void onPostExecute(LiveData<FavoriteMovie []> favoriteMovies) {
         super.onPostExecute(favoriteMovies);
         resultGetter.getFavMovieData(favoriteMovies);
     }
 
     @Override
-    protected ArrayList<FavoriteMovie> doInBackground(String... strings) {
-
-        ArrayList<FavoriteMovie> favoriteMovies = new ArrayList<>();
-
+    protected LiveData<FavoriteMovie []> doInBackground(String... strings) {
 
         favMovieDB = Room.databaseBuilder(root,
                 FavMovieDB.class,
@@ -63,22 +61,21 @@ public class FavMovieDataOpsTask extends AsyncTask<String, Integer, ArrayList<Fa
                     favMovieDB.daoAccess().insertSingleMovie(movie);
                 } else if (type.equals(root
                         .getString(R.string.get_fav_movie_by_id))){
-                    favoriteMovies.add(favMovieDB.daoAccess().fetchSingleMovie(movie_id));
+                    return favMovieDB.daoAccess().fetchSingleMovie(movie_id);
                 } else if (type.equals(root
                         .getString(R.string.delete_fav_movie))) {
                     favMovieDB.daoAccess().deleteMovie(movie);
-                }
-                else if (type.equals(root
+                } else if (type.equals(root
                         .getString(R.string.get_all_fav_movie))){
-                    favoriteMovies.addAll(Arrays.asList(favMovieDB.daoAccess().fetchAllFavMovies()));
+                    Log.i("TAG_C", "GETTING ALL MOVIES!!");
+                    return favMovieDB.daoAccess().fetchAllFavMovies();
                 }
-
             }
 
         } catch (Exception e){
             e.printStackTrace();
         }
 
-        return favoriteMovies;
+        return null;
     }
 }

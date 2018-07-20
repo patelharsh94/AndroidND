@@ -1,10 +1,8 @@
 package com.androidnd.harshpatel.movies;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,42 +11,32 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MovieShowCase extends AppCompatActivity implements ReviewTrailerResultGetter{
 
-    private ArrayList<FavoriteMovie> favoriteMoviesList = new ArrayList<>();
     private Movie movie;
     private FavoriteMovie favoriteMovie;
     private CheckBox isFavorite;
     private Context root;
-    private boolean isFavoriteChecked = false;
-    private FavMovieDataOpsTask favMovieDataOpsTask;
-    private ArrayList<FavoriteMovie> favoriteMovies = new ArrayList<>();
-    private ArrayList<String> favMovieIds = new ArrayList<>();
     private RecyclerView trailerRecyclerView;
     private RecyclerView reviewRecyclerView;
     private TrailerAdapter trailerAdapter;
     private ReviewsAdapter reviewsAdapter;
     private HashMap<String, String> trailerTitleMap = new HashMap<>();
     private HashMap<String, String> reviewMap = new HashMap<>();
-    private ReviewTrailerApiCallTask reviewTrailerApiCallTask;
-    private String reviewApiURL, trailerApiURL;
 
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ReviewTrailerApiCallTask reviewTrailerApiCallTask;
+        String reviewApiURL, trailerApiURL;
 
         root = getBaseContext();
         String ratingString = "%s/10";
@@ -114,19 +102,25 @@ public class MovieShowCase extends AppCompatActivity implements ReviewTrailerRes
 
         Log.i("SHOW_CASE", movie.getTitle() + ":" + movie.getIsFavorite());
 
+        if(movie.getIsFavorite() == 1) {
+            isFavorite.setChecked(true);
+        }
+        else {
+            isFavorite.setChecked(false);
+        }
 
         isFavorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
 
-                    isFavoriteChecked = true;
+                    insertMovieInFav();
 
                     Log.i("TAG", movie.getTitle() + " CHECKED");
                 }
                 // if not checked
                 else {
-                    isFavoriteChecked = false;
+                    removeMovieFromFav();
 
                     Log.i("TAG", movie.getTitle() +" UNCHECKED");
 
@@ -136,22 +130,21 @@ public class MovieShowCase extends AppCompatActivity implements ReviewTrailerRes
 
     }
 
+    public void insertMovieInFav() {
+        final FavMoviesViewModel viewModel = ViewModelProviders.of(this).get(FavMoviesViewModel.class);
+
+        viewModel.insertFavMovie(favoriteMovie, root);
+    }
+
+    public void removeMovieFromFav() {
+        final FavMoviesViewModel viewModel = ViewModelProviders.of(this).get(FavMoviesViewModel.class);
+
+        viewModel.deleteFavMovie(favoriteMovie, root);
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
-
-        if(isFavoriteChecked)
-        {
-            final FavMoviesViewModel viewModel = ViewModelProviders.of(this).get(FavMoviesViewModel.class);
-
-            viewModel.insertFavMovie(favoriteMovie, root);
-        }
-        else {
-
-            final FavMoviesViewModel viewModel = ViewModelProviders.of(this).get(FavMoviesViewModel.class);
-
-            viewModel.deleteFavMovie(favoriteMovie, root);
-        }
     }
 
     @Override
@@ -188,37 +181,11 @@ public class MovieShowCase extends AppCompatActivity implements ReviewTrailerRes
     @Override
     protected void onStart() {
         super.onStart();
-
-        final FavMoviesViewModel viewModel = ViewModelProviders.of(this).get(FavMoviesViewModel.class);
-
-        viewModel.getFavMovies(root).observe(this, new Observer<ArrayList<FavoriteMovie>>() {
-            @Override
-            public void onChanged(@Nullable ArrayList<FavoriteMovie> favoriteMovieArrayList) {
-                favoriteMovies = favoriteMovieArrayList;
-                Log.i("TAG_C", "GOT FAV MOVIES: " + favoriteMovieArrayList.toString());
-
-                for(FavoriteMovie favoriteMovie : favoriteMovies) {
-                    favMovieIds.add(favoriteMovie.getId());
-                }
-
-
-                if(favMovieIds.contains(favoriteMovie.getId()))
-                {
-                    isFavoriteChecked = true;
-                }
-                else {
-                    isFavoriteChecked = false;
-                }
-
-                isFavorite.setChecked(isFavoriteChecked);
-
-            }
-        });
-
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
+
 }

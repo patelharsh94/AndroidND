@@ -1,17 +1,13 @@
 package com.androidnd.harshpatel.movies;
 
 import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 
 /**
@@ -81,4 +77,8 @@ public class MovieImageAdapter extends BaseAdapter{
         return movie_grid;
     }
 
+    public void setData(ArrayList<Movie> movies) {
+        this.movieList = movies;
+        notifyDataSetChanged();
+    }
 }

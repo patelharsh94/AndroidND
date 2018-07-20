@@ -12,9 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.TextView;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class PopularMovieGrid extends Fragment {
 
@@ -24,7 +23,7 @@ public class PopularMovieGrid extends Fragment {
     private GridView movie_grid;
     private ArrayList<FavoriteMovie> favoriteMovies = new ArrayList<>();
     private ArrayList<String> favMovieIds = new ArrayList<>();
-    private String POP_MOVIE_KEY = "POPULAR_MOVIES_LIST";
+    private String FIRST_MOVIE_POS = "FIRST_MOVIE_POS";
 
     public PopularMovieGrid() {
         // Required empty public constructor
@@ -34,7 +33,8 @@ public class PopularMovieGrid extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
         if(savedInstanceState != null) {
-            this.movieList = savedInstanceState.getParcelableArrayList(POP_MOVIE_KEY);
+            int index = savedInstanceState.getInt(FIRST_MOVIE_POS);
+            movie_grid.smoothScrollToPosition(index);
         }
 
         super.onCreate(savedInstanceState);
@@ -50,6 +50,12 @@ public class PopularMovieGrid extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Movie currMovie = movieList.get(i);
+
+                if(favMovieIds.contains(currMovie.getId())) {
+                    currMovie.setIsFavorite(1);
+                } else {
+                    currMovie.setIsFavorite(0);
+                }
 
                 Intent movieShowCase = new Intent(view.getContext(), MovieShowCase.class);
                 movieShowCase.putExtra(String.valueOf(R.string.movie_data_extra), currMovie);
@@ -86,12 +92,13 @@ public class PopularMovieGrid extends Fragment {
 
         final FavMoviesViewModel viewModel = ViewModelProviders.of(this.getActivity()).get(FavMoviesViewModel.class);
 
-        viewModel.getFavMovies(root.getContext()).observe(this, new Observer<ArrayList<FavoriteMovie>>() {
+        viewModel.getFavMovies(root.getContext()).observe(this, new Observer<FavoriteMovie []>() {
             @Override
-            public void onChanged(@Nullable ArrayList<FavoriteMovie> favoriteMovieArrayList) {
-                if(favoriteMovieArrayList != null)
+            public void onChanged(@Nullable FavoriteMovie[] liveData) {
+
+                if(liveData != null)
                 {
-                    favoriteMovies = favoriteMovieArrayList;
+                    favoriteMovies.addAll(Arrays.asList(liveData));
 
                     for(FavoriteMovie favoriteMovie : favoriteMovies) {
                         favMovieIds.add(favoriteMovie.getId());
@@ -99,18 +106,18 @@ public class PopularMovieGrid extends Fragment {
 
                 }
 
-                Log.i("TAG_C", "GOT FAV MOVIES IN POP: " + favoriteMovieArrayList.toString());
+                Log.i("TAG_C", "GOT FAV MOVIES IN POP: " + liveData);
             }
         });
-
 
         Log.i("TAG", "IN ON START");
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        int first_movie_position = movie_grid.getFirstVisiblePosition();
 
-        outState.putParcelableArrayList(POP_MOVIE_KEY, this.movieList);
+        outState.putInt(FIRST_MOVIE_POS, first_movie_position);
         super.onSaveInstanceState(outState);
     }
 }

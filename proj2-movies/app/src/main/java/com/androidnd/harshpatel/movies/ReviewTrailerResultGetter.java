@@ -1,6 +1,5 @@
 package com.androidnd.harshpatel.movies;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface ReviewTrailerResultGetter {

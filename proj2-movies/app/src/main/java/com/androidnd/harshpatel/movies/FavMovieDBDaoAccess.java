@@ -1,5 +1,6 @@
 package com.androidnd.harshpatel.movies;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -15,10 +16,10 @@ public interface FavMovieDBDaoAccess {
     void insertSingleMovie(FavoriteMovie movie);
 
     @Query("Select * from FavoriteMovie where id = :id")
-    FavoriteMovie fetchSingleMovie(String id);
+    LiveData<FavoriteMovie []> fetchSingleMovie(String id);
 
     @Query("Select * from FavoriteMovie")
-    FavoriteMovie [] fetchAllFavMovies();
+    LiveData<FavoriteMovie []> fetchAllFavMovies();
 
     @Update
     void updateMovie(FavoriteMovie movie);
