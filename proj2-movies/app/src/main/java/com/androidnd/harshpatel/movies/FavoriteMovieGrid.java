@@ -36,8 +36,10 @@ public class FavoriteMovieGrid extends Fragment {
         SINGLE_URL = getString(R.string.api_url_single_movie);
 
         if(savedInstanceState != null) {
-            int index = savedInstanceState.getInt(FIRST_MOVIE_POS);
-            favMovieGrid.smoothScrollToPosition(index);
+            if(favMovieGrid != null) {
+                    int index = savedInstanceState.getInt(FIRST_MOVIE_POS);
+                    favMovieGrid.smoothScrollToPosition(index);
+            }
         }
 
         Log.i("TAG_C", "ON CREATE");
@@ -167,9 +169,12 @@ public class FavoriteMovieGrid extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-        int first_movie_position = favMovieGrid.getFirstVisiblePosition();
 
-        outState.putInt(FIRST_MOVIE_POS, first_movie_position);
+        if(favMovieGrid != null) {
+            int first_movie_position = favMovieGrid.getFirstVisiblePosition();
+
+            outState.putInt(FIRST_MOVIE_POS, first_movie_position);
+        }
 
         super.onSaveInstanceState(outState);
 

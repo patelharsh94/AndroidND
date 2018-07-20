@@ -33,8 +33,10 @@ public class PopularMovieGrid extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
         if(savedInstanceState != null) {
-            int index = savedInstanceState.getInt(FIRST_MOVIE_POS);
-            movie_grid.smoothScrollToPosition(index);
+            if(movie_grid != null) {
+                int index = savedInstanceState.getInt(FIRST_MOVIE_POS);
+                movie_grid.smoothScrollToPosition(index);
+            }
         }
 
         super.onCreate(savedInstanceState);
@@ -115,9 +117,13 @@ public class PopularMovieGrid extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        int first_movie_position = movie_grid.getFirstVisiblePosition();
 
-        outState.putInt(FIRST_MOVIE_POS, first_movie_position);
+        if(movie_grid != null) {
+            int first_movie_position = movie_grid.getFirstVisiblePosition();
+
+            outState.putInt(FIRST_MOVIE_POS, first_movie_position);
+        }
+
         super.onSaveInstanceState(outState);
     }
 }
