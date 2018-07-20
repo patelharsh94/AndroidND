@@ -115,8 +115,6 @@ public class MovieApiCallTask extends AsyncTask<String, Integer, ArrayList<Movie
                 Log.i(MOVIEAPICALLTASKTAG, url.toString());
                 String movieData;
 
-
-
                 if (conn.getResponseCode() != 200) {
                     throw new RuntimeException("Failed : HTTP error code : "
                             + conn.getResponseCode());
@@ -132,8 +130,6 @@ public class MovieApiCallTask extends AsyncTask<String, Integer, ArrayList<Movie
 
                 conn.disconnect();
             }
-
-
 
         } catch (Exception e)
         {

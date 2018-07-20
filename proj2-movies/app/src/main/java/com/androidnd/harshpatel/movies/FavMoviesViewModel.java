@@ -10,8 +10,7 @@ import java.util.ArrayList;
 
 public class FavMoviesViewModel extends ViewModel implements FavMovieDBResultGetter {
 
-    private MutableLiveData<ArrayList<FavoriteMovie>> favMovieList;
-    private String API_URL;
+    private LiveData<FavoriteMovie []> favMovieList;
     private FavMovieDataOpsTask favMovieDataOpsTask;
 
     public FavMoviesViewModel() {
@@ -32,10 +31,10 @@ public class FavMoviesViewModel extends ViewModel implements FavMovieDBResultGet
         favMovieDataOpsTask.execute(root.getString(R.string.delete_fav_movie), favoriteMovie.getId(), favoriteMovie.getTitle());
     }
 
-    public LiveData<ArrayList<FavoriteMovie>> getFavMovies(Context root) {
+    public LiveData<FavoriteMovie []> getFavMovies(Context root) {
 
         if(favMovieList == null) {
-            favMovieList = new MutableLiveData<ArrayList<FavoriteMovie>>();
+            favMovieList = new MutableLiveData<>();
         }
         loadMovies(root);
 
@@ -43,10 +42,11 @@ public class FavMoviesViewModel extends ViewModel implements FavMovieDBResultGet
     }
 
     @Override
-    public void getFavMovieData(ArrayList<FavoriteMovie> favoriteMovies) {
+    public void getFavMovieData(LiveData<FavoriteMovie []> favoriteMovies) {
 
-        if(this.favMovieList != null) {
-            this.favMovieList.setValue(favoriteMovies);
+        if(favoriteMovies != null) {
+            Log.i("TAG_G", "FOUND MOVIES: "  + favoriteMovies.getValue());
+            this.favMovieList = favoriteMovies;
         }
     }
 

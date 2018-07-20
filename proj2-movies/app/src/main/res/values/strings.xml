@@ -30,4 +30,5 @@
     <string name="IS_FAV_MOVIE">is_fav_movie</string>
     <string name="trailer_label">Trailer:</string>
     <string name="play_button_description">just a picture of a play button</string>
+    <string name="get_all_fav_array">get_all_fav_array</string>
 </resources>

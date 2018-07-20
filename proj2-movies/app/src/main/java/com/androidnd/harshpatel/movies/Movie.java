@@ -70,6 +70,10 @@ public class Movie implements Parcelable
 
     public int getIsFavorite() { return isFavorite; };
 
+    public void setIsFavorite(int val) {
+        this.isFavorite = val;
+    }
+
     @Override
     public String toString() {
         return "Movie{" +

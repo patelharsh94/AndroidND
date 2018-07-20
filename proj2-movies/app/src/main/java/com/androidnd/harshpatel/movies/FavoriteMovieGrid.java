@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.ArraySet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +23,9 @@ public class FavoriteMovieGrid extends Fragment {
     private String SINGLE_URL;
     private HashMap<String, FavoriteMovie> favoriteMovieHashMap = new HashMap<>();
     private HashMap<String, Movie> movieHashMap = new HashMap<>();
-    private HashMap<String, Movie> newMoviesMap = new HashMap<>();
     private GridView favMovieGrid;
     private ArrayList<Movie> movieList = new ArrayList<>();
-    private String FAV_MOVIE_LIST = "FAV_MOVIE_LIST";
+    private String FIRST_MOVIE_POS = "FIRST_MOVIE_POS";
 
     public FavoriteMovieGrid() {
         // Required empty public constructor
@@ -35,9 +33,15 @@ public class FavoriteMovieGrid extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         SINGLE_URL = getString(R.string.api_url_single_movie);
+
+        if(savedInstanceState != null) {
+            int index = savedInstanceState.getInt(FIRST_MOVIE_POS);
+            favMovieGrid.smoothScrollToPosition(index);
+        }
+
         Log.i("TAG_C", "ON CREATE");
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -90,14 +94,9 @@ public class FavoriteMovieGrid extends Fragment {
 
                     populateFavMovieGrid();
                 }
-
             }
         });
-
-
     }
-
-
 
     public void populateFavMovieGrid() {
 
@@ -108,12 +107,16 @@ public class FavoriteMovieGrid extends Fragment {
 
         favMovieGrid = root.findViewById(R.id.favorite_movie_grid);
         favMovieGrid.setAdapter(new MovieImageAdapter(root.getContext(), movieList));
-        //final ArrayList<Movie> currentList = movieList
         favMovieGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Movie currMovie = movieList.get(i);
+                if(favoriteMovieHashMap.containsKey(currMovie.getId())) {
+                    currMovie.setIsFavorite(1);
+                } else {
+                    currMovie.setIsFavorite(0);
+                }
 
                 Intent movieShowCase = new Intent(view.getContext(), MovieShowCase.class);
                 movieShowCase.putExtra(String.valueOf(R.string.movie_data_extra), currMovie);
@@ -122,30 +125,34 @@ public class FavoriteMovieGrid extends Fragment {
         });
         movieHashMap = new HashMap<>();
         favMovieGrid.refreshDrawableState();
+
     }
 
     @Override
     public void onResume() {
         Log.i("TAG_E", "ON RESUME");
 
-        final FavMoviesViewModel viewModel = ViewModelProviders.of(this).get(FavMoviesViewModel.class);
+        final FavMoviesViewModel viewModel = ViewModelProviders.of(this.getActivity()).get(FavMoviesViewModel.class);
 
-        viewModel.getFavMovies(root.getContext()).observe(this, new Observer<ArrayList<FavoriteMovie>>() {
+        viewModel.getFavMovies(root.getContext()).observe(this, new Observer<FavoriteMovie []>() {
+
             @Override
-            public void onChanged(@Nullable ArrayList<FavoriteMovie> favoriteMovieArrayList) {
+            public void onChanged(@Nullable FavoriteMovie[] liveData) {
                 favoriteMovieHashMap = new HashMap<>();
-                Log.i("TAG_D", "FOUND FAV MOVIES: " + favoriteMovieArrayList);
-                if(favoriteMovieArrayList != null)
-                {
-                    for(FavoriteMovie movie : favoriteMovieArrayList) {
+
+                if(liveData != null) {
+
+                    Log.i("TAG_D", "FOUND FAV MOVIES: " + liveData);
+
+                    for(FavoriteMovie movie : liveData) {
                         favoriteMovieHashMap.put(movie.getId(), movie);
                     }
+
                 }
 
                 getMovies();
-
-                Log.i("TAG_C", "GOT FAV MOVIES IN GRID: " + favoriteMovieArrayList.toString());
             }
+
         });
 
         super.onResume();
@@ -160,7 +167,10 @@ public class FavoriteMovieGrid extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-        outState.putParcelableArrayList(FAV_MOVIE_LIST, this.movieList);
+        int first_movie_position = favMovieGrid.getFirstVisiblePosition();
+
+        outState.putInt(FIRST_MOVIE_POS, first_movie_position);
+
         super.onSaveInstanceState(outState);
 
         Log.i("TAG_C", "ON SAVE INSTANCE STATE");

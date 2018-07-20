@@ -12,20 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-
 import java.util.ArrayList;
 
 
-public class TopRatedMovieGrid extends Fragment implements FavMovieDBResultGetter {
+public class TopRatedMovieGrid extends Fragment {
 
     private String API_URL;
     private ArrayList<Movie> movieList = new ArrayList<>();
     private View root;
     private GridView movie_grid;
     private FavMovieDataOpsTask favMovieDataOpsTask;
-    private ArrayList<FavoriteMovie> favoriteMovies = new ArrayList<>();
+    private FavoriteMovie [] favoriteMovies;
     private ArrayList<String> favMovieIds = new ArrayList<>();
-    private String TOP_RATED_KEY = "TOP_RATED_MOVIES_LIST";
+    private String FIRST_MOVIE_POS = "FIRST_MOVIE_POS";
 
     public TopRatedMovieGrid() {
         // Required empty public constructor
@@ -41,6 +40,12 @@ public class TopRatedMovieGrid extends Fragment implements FavMovieDBResultGette
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Movie currMovie = movieList.get(i);
+
+                if(favMovieIds.contains(currMovie.getId())) {
+                    currMovie.setIsFavorite(1);
+                } else {
+                    currMovie.setIsFavorite(0);
+                }
 
                 Intent movieShowCase = new Intent(view.getContext(), MovieShowCase.class);
                 movieShowCase.putExtra(String.valueOf(R.string.movie_data_extra), currMovie);
@@ -66,7 +71,6 @@ public class TopRatedMovieGrid extends Fragment implements FavMovieDBResultGette
             }
         });
 
-
         return root;
     }
 
@@ -75,19 +79,23 @@ public class TopRatedMovieGrid extends Fragment implements FavMovieDBResultGette
     @Override
     public void onStart() {
         super.onStart();
-        favMovieDataOpsTask = new FavMovieDataOpsTask(root.getContext());
-        favMovieDataOpsTask.resultGetter = this;
+        final FavMoviesViewModel viewModel = ViewModelProviders.of(this.getActivity()).get(FavMoviesViewModel.class);
 
-        favMovieDataOpsTask.execute(root.getContext().getString(R.string.get_all_fav_movie), "", "");
-        Log.i("TAG", "IN ON START");
+        viewModel.getFavMovies(root.getContext()).observe(this, favMovies -> {
+            populateMovieData(favMovies);
+        });
+
     }
 
-    @Override
-    public void getFavMovieData(ArrayList<FavoriteMovie> favoriteMovies) {
+    public void populateMovieData(FavoriteMovie [] favoriteMovies) {
         this.favoriteMovies = favoriteMovies;
+        FavoriteMovie [] movies = favoriteMovies;
 
-        for(FavoriteMovie favoriteMovie : favoriteMovies) {
-            favMovieIds.add(favoriteMovie.getId());
+        if(movies != null)
+        {
+            for(FavoriteMovie favoriteMovie : movies) {
+                favMovieIds.add(favoriteMovie.getId());
+            }
         }
 
         Log.i("TAG", favoriteMovies.toString());
@@ -96,7 +104,8 @@ public class TopRatedMovieGrid extends Fragment implements FavMovieDBResultGette
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         if(savedInstanceState != null) {
-            this.movieList = savedInstanceState.getParcelableArrayList(TOP_RATED_KEY);
+            int index = savedInstanceState.getInt(FIRST_MOVIE_POS);
+            movie_grid.smoothScrollToPosition(index);
         }
 
         super.onCreate(savedInstanceState);
@@ -104,7 +113,9 @@ public class TopRatedMovieGrid extends Fragment implements FavMovieDBResultGette
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList(TOP_RATED_KEY, this.movieList);
+        int first_movie_position = movie_grid.getFirstVisiblePosition();
+
+        outState.putInt(FIRST_MOVIE_POS, first_movie_position);
         super.onSaveInstanceState(outState);
     }
 }

@@ -3,8 +3,6 @@ package com.androidnd.harshpatel.movies;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MoviesViewModel extends ViewModel implements MovieDBAPIResultGetter {
