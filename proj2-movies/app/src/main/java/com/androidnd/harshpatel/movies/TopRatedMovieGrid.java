@@ -59,7 +59,7 @@ public class TopRatedMovieGrid extends Fragment {
                              Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_top_rated_movie_grid, container, false);
-        API_URL =  this.getResources().getString(R.string.api_url_top_rated_movie);
+        API_URL =  String.format(this.getResources().getString(R.string.api_url_top_rated_movie), BuildConfig.MOVIE_DB_API_KEY);
 
         final MoviesViewModel viewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
         ArrayList<String> top_movie_urls = new ArrayList<>();

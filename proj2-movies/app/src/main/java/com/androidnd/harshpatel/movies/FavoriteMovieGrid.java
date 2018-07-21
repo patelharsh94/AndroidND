@@ -75,7 +75,7 @@ public class FavoriteMovieGrid extends Fragment {
         for(final String movieId : favoriteMovieHashMap.keySet()) {
 
             Log.i("TAG_C", "GOT MOVIE ID: " + movieId);
-            String curr_url = String.format(SINGLE_URL, movieId);
+            String curr_url = String.format(SINGLE_URL, movieId, BuildConfig.MOVIE_DB_API_KEY);
             currUrls.add(curr_url);
         }
 

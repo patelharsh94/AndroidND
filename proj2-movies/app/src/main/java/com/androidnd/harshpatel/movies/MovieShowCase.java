@@ -89,12 +89,14 @@ public class MovieShowCase extends AppCompatActivity implements ReviewTrailerRes
         reviewRecyclerView = findViewById(R.id.review_recycler_view);
 
 
-        reviewApiURL = String.format(root.getString(R.string.api_url_review), movie.getId());
+        reviewApiURL = String.format(root.getString(R.string.api_url_review), movie.getId(),
+                                     BuildConfig.MOVIE_DB_API_KEY);
         reviewTrailerApiCallTask = new ReviewTrailerApiCallTask(root);
         reviewTrailerApiCallTask.resultGetter = this;
         reviewTrailerApiCallTask.execute(reviewApiURL, root.getString(R.string.type_review));
 
-        trailerApiURL = String.format(root.getString(R.string.api_url_trailer), movie.getId());
+        trailerApiURL = String.format(root.getString(R.string.api_url_trailer),
+                                      movie.getId(), BuildConfig.MOVIE_DB_API_KEY);
         reviewTrailerApiCallTask = new ReviewTrailerApiCallTask(root);
         reviewTrailerApiCallTask.resultGetter = this;
         reviewTrailerApiCallTask.execute(trailerApiURL, root.getString(R.string.type_trailer));

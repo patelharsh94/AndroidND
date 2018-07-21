@@ -69,7 +69,7 @@ public class PopularMovieGrid extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        API_URL =  this.getResources().getString(R.string.api_url_popular_movie);
+        API_URL =  String.format(this.getResources().getString(R.string.api_url_popular_movie), BuildConfig.MOVIE_DB_API_KEY);
 
         final MoviesViewModel viewModel = ViewModelProviders.of(this).get(MoviesViewModel.class);
         ArrayList<String> pop_movie_urls = new ArrayList<>();
